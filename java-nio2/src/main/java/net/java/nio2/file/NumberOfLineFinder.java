@@ -19,15 +19,10 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * 计算行数
  */
-@Slf4j
-public class NumberOfLineFinderExample {
-    private static final String INPUT_FILE_NAME = System.getProperty("user.home") + "\\input.txt";
-
+public class NumberOfLineFinder {
     public static int getTotalNumberOfLinesUsingBufferedReader(String fileName) {
         int lines = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -128,14 +123,4 @@ public class NumberOfLineFinderExample {
     }
     
 
-    public static void main(String... args) throws Exception {
-        log.info("Total Number of Lines Using BufferedReader: %s%n", getTotalNumberOfLinesUsingBufferedReader(INPUT_FILE_NAME));
-        log.info("Total Number of Lines Using LineNumberReader: %s%n", getTotalNumberOfLinesUsingLineNumberReader(INPUT_FILE_NAME));
-        log.info("Total Number of Lines Using Scanner: %s%n", getTotalNumberOfLinesUsingScanner(INPUT_FILE_NAME));
-        log.info("Total Number of Lines Using NIO Files: %s%n", getTotalNumberOfLinesUsingNIOFiles(INPUT_FILE_NAME));
-        log.info("Total Number of Lines Using NIO Files#readAllLines: %s%n", getTotalNumberOfLinesUsingNIOFilesReadAllLines(INPUT_FILE_NAME));
-        log.info("Total Number of Lines Using NIO FileChannel: %s%n", getTotalNumberOfLinesUsingNIOFileChannel(INPUT_FILE_NAME));
-        log.info("Total Number of Lines Using Apache Commons IO: %s%n", getTotalNumberOfLinesUsingApacheCommonsIO(INPUT_FILE_NAME));
-        log.info("Total Number of Lines Using NIO Google Guava: %s%n", getTotalNumberOfLinesUsingGoogleGuava(INPUT_FILE_NAME));
-    }
 }
