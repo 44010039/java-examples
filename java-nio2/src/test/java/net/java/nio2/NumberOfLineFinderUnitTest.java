@@ -1,4 +1,4 @@
-package net.java.nio2.base;
+package net.java.nio2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
