@@ -1,4 +1,4 @@
-package net.java.nio2.file;
+package net.java.nio2.base;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package net.java.nio2.async;
+package net.java.nio2.socketchannel;
 
 import java.io.File;
 import java.io.IOException;

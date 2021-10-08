@@ -1,4 +1,4 @@
-package net.java.nio2.file;
+package net.java.nio2.base;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
