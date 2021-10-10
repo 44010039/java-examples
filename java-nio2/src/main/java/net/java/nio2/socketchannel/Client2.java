@@ -1,6 +1,8 @@
 package net.java.nio2.socketchannel;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -8,14 +10,14 @@ import java.nio.channels.SocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SelectorEchoClient {
+public class Client2 {
     private SocketChannel client;
     private ByteBuffer buffer;
-    private static SelectorEchoClient instance;
+    private static Client2 instance;
 
-    public static SelectorEchoClient start() {
+    public static Client2 start() {
         if (instance == null)
-            instance = new SelectorEchoClient();
+            instance = new Client2();
 
         return instance;
     }
@@ -25,7 +27,7 @@ public class SelectorEchoClient {
         buffer = null;
     }
 
-    private SelectorEchoClient() {
+    private Client2() {
         try {
             client = SocketChannel.open(new InetSocketAddress("localhost", 5454));
             buffer = ByteBuffer.allocate(256);
@@ -42,7 +44,6 @@ public class SelectorEchoClient {
             buffer.clear();
             client.read(buffer);
             response = new String(buffer.array()).trim();
-            // log.info("response=" + response);
             buffer.clear();
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,12 +52,15 @@ public class SelectorEchoClient {
     }
 
     public static void main(String[] args) throws IOException {
-        SelectorEchoClient client = SelectorEchoClient.start();
-        String resp1 = client.sendMessage("hello");
-        String resp2 = client.sendMessage("world");
-        log.info("resp1 =" + resp1);
-        log.info("resp2 =" + resp2);
+        Client2 client = Client2.start();
 
-        client.stop();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line;
+        log.debug("Message to server:");
+        while ((line = br.readLine()) != null) {
+            String response = client.sendMessage(line);
+            log.debug("response from server: " + response);
+            log.debug("Message to server:");
+        }
     }
 }

@@ -14,10 +14,10 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
+ * The Server With Selector
  */
 @Slf4j
-public class SelectorEchoServer {
+public class AsyncSelectorServer {
     private static final String POISON_PILL = "POISON_PILL";
 
     public static void main(String[] args) throws IOException {
@@ -50,19 +50,28 @@ public class SelectorEchoServer {
     }
 
     private static void answerWithEcho(ByteBuffer buffer, SelectionKey key) throws IOException {
-        SocketChannel client = (SocketChannel) key.channel();
-        client.read(buffer);
-        if (new String(buffer.array()).trim().equals(POISON_PILL)) {
-            client.close();
-            log.info("Not accepting client messages anymore");
-        } else {
-            buffer.flip();
-            log.info("server receive message: " + new String(buffer.array()).trim());
+        SocketChannel channel = null;
+        try {
+            channel = (SocketChannel) key.channel();
+            channel.read(buffer);
+            if (new String(buffer.array()).trim().equals(POISON_PILL)) {
+                channel.close();
+                log.info("Not accepting client messages anymore");
+            } else {
+                buffer.flip();
+                log.info("server receive message: " + new String(buffer.array()).trim());
 
-            client.write(buffer);
-            buffer.clear();
+                channel.write(buffer);
+                buffer.clear();
+            }
+        } catch (IOException e) {
+            // 一定要捕捉异常，否则客户端断开后，程序会退出
+            // 一定要关闭通道，否则会死循环
+            if (channel != null) {
+                channel.close();
+            }
+            e.printStackTrace();
         }
-        
     }
 
     private static void register(Selector selector, ServerSocketChannel serverSocket) throws IOException {
@@ -75,10 +84,10 @@ public class SelectorEchoServer {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
         String classpath = System.getProperty("java.class.path");
-        String className = SelectorEchoServer.class.getCanonicalName();
+        String className = AsyncSelectorServer.class.getCanonicalName();
 
         ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, className);
 
         return builder.start();
-    }    
+    }
 }

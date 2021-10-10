@@ -12,12 +12,12 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AsyncEchoIntegrationTest {
     private Process server;
-    private AsyncEchoClient client;
+    private Client1 client;
 
     @BeforeAll
     public void setup() throws IOException, InterruptedException {
-        server = AsyncEchoServer2.start();
-        client = AsyncEchoClient.getInstance();
+        server = AsyncCompletionHandlerServer.start();
+        client = Client1.getInstance();
     }
 
     @Test

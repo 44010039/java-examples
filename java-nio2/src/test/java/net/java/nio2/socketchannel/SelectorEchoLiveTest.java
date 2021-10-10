@@ -12,12 +12,12 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SelectorEchoLiveTest {
     private Process server;
-    private SelectorEchoClient client;
+    private Client2 client;
 
     @BeforeAll
     public void setup() throws IOException, InterruptedException {
-        server = SelectorEchoServer.start();
-        client = SelectorEchoClient.start();
+        server = AsyncSelectorServer.start();
+        client = Client2.start();
     }
 
     @Test

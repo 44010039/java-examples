@@ -15,15 +15,15 @@ import lombok.extern.slf4j.Slf4j;
  * 异步消息发送
  */
 @Slf4j
-public class AsyncEchoClient {
+public class Client1 {
     private AsynchronousSocketChannel client;
     private Future<Void> future;
-    private static AsyncEchoClient instance;    
+    private static Client1 instance;    
 
-    private AsyncEchoClient() {
+    private Client1() {
         try {
             client = AsynchronousSocketChannel.open();
-            InetSocketAddress hostAddress = new InetSocketAddress("localhost", 4999);
+            InetSocketAddress hostAddress = new InetSocketAddress("localhost", 5454);
             future = client.connect(hostAddress);
             start();
 
@@ -32,9 +32,9 @@ public class AsyncEchoClient {
         }
     }
 
-    public static AsyncEchoClient getInstance() {
+    public static Client1 getInstance() {
         if (instance == null)
-            instance = new AsyncEchoClient();
+            instance = new Client1();
         return instance;
     }
 
@@ -79,8 +79,7 @@ public class AsyncEchoClient {
     }
 
     public static void main(String[] args) throws Exception {
-        AsyncEchoClient client = AsyncEchoClient.getInstance();
-        client.start();
+        Client1 client = Client1.getInstance();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String line;
         log.debug("Message to server:");

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.java</groupId>
+        <artifactId>examples</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+    <artifactId>java-nio-server</artifactId>
+    <name>Java Nio Server</name>
+    <description>
+        Java AIO 通信框架，支持 TCP、UDP、SSL/TLS
+
+        项目特色
+        高性能、高并发、低延迟、低能耗
+        代码量极少，可读性强。核心代码不到 1500 行，工程结构、包层次清晰。
+        学习门槛低，二次开发只需实现 2 个接口（Protocol、MessageProcessor）,具备通信开发经验的几乎无学习成本。
+        良好的线程模型、内存模型设计，保障服务高效稳定的运行。
+        支持自定义插件，并已提供了丰富地插件，包括：SSL/TLS通信插件、心跳插件、断链重连插件、服务指标统计插件、黑名单插件、内存池监测插件。
+
+        https://gitee.com/smartboot/smart-socket
+    </description>
+
+    <!-- <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+    </dependencies> -->
+</project>

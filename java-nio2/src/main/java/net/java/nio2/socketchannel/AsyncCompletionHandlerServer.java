@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,16 +18,16 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * 接收客户端发送的消息，并返回消息给客户端
  * 
+ * 
  */
 @Slf4j
-public class AsyncEchoServer2 {
+public class AsyncCompletionHandlerServer {
     private AsynchronousServerSocketChannel serverChannel;
-    private AsynchronousSocketChannel clientChannel;
 
-    public AsyncEchoServer2() {
+    public AsyncCompletionHandlerServer() {
         try {
             serverChannel = AsynchronousServerSocketChannel.open();
-            InetSocketAddress hostAddress = new InetSocketAddress("localhost", 4999);
+            InetSocketAddress hostAddress = new InetSocketAddress("localhost", 5454);
             serverChannel.bind(hostAddress);
             log.info("Message Server is running...");
             while (true) {
@@ -34,23 +35,24 @@ public class AsyncEchoServer2 {
                 serverChannel.accept(null, new CompletionHandler<AsynchronousSocketChannel, Object>() {
 
                     @Override
-                    public void completed(AsynchronousSocketChannel result, Object attachment) {
+                    public void completed(AsynchronousSocketChannel channel, Object attachment) {
                         if (serverChannel.isOpen())
                             serverChannel.accept(null, this);
-                        clientChannel = result;
-                        if ((clientChannel != null) && (clientChannel.isOpen())) {
+            
+                        if ((channel != null) && (channel.isOpen())) {
                             ReadWriteHandler handler = new ReadWriteHandler();
                             ByteBuffer buffer = ByteBuffer.allocate(32);
                             Map<String, Object> readInfo = new HashMap<>();
                             readInfo.put("action", "read");
                             readInfo.put("buffer", buffer);
-                            clientChannel.read(buffer, readInfo, handler);
+                            readInfo.put("channel", channel);
+                            channel.read(buffer, readInfo, handler);
                         }
                     }
 
                     @Override
                     public void failed(Throwable exc, Object attachment) {
-                        // process error
+                        exc.printStackTrace();
                     }
                 });
                 try {
@@ -70,30 +72,31 @@ public class AsyncEchoServer2 {
         public void completed(Integer result, Map<String, Object> attachment) {
             Map<String, Object> actionInfo = attachment;
             String action = (String) actionInfo.get("action");
+            AsynchronousSocketChannel channel = (AsynchronousSocketChannel) actionInfo.get("channel");
             if ("read".equals(action)) {
                 ByteBuffer buffer = (ByteBuffer) actionInfo.get("buffer");
                 buffer.flip();
                 actionInfo.put("action", "write");
-                clientChannel.write(buffer, actionInfo, this);
+                channel.write(buffer, actionInfo, this);
                 buffer.clear();
             } else if ("write".equals(action)) {
                 ByteBuffer buffer = ByteBuffer.allocate(32);
                 actionInfo.put("action", "read");
                 actionInfo.put("buffer", buffer);
-                clientChannel.read(buffer, actionInfo, this);
+                channel.read(buffer, actionInfo, this);
             }
 
         }
 
         @Override
         public void failed(Throwable exc, Map<String, Object> attachment) {
-
+            exc.printStackTrace();
         }
 
     }
 
     public static void main(String[] args) {
-        new AsyncEchoServer2();
+        new AsyncCompletionHandlerServer();
     }
 
     /**
@@ -106,7 +109,7 @@ public class AsyncEchoServer2 {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
         String classpath = System.getProperty("java.class.path");
-        String className = AsyncEchoServer2.class.getCanonicalName();
+        String className = AsyncCompletionHandlerServer.class.getCanonicalName();
 
         ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, className);
 
