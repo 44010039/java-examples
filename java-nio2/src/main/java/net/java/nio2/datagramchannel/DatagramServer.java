@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DatagramServer {
     public static DatagramChannel startServer() throws IOException {
         InetSocketAddress address = new InetSocketAddress("localhost", 7001);
-        DatagramChannel server = DatagramChannelBuilder.bindChannel(address);
+        DatagramChannel server = DatagramChannelBuilder.custom().open().bind(address).build();
         
         log.info("Server started at #" + address);
         

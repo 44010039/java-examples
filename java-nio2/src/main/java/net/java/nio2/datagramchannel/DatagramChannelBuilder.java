@@ -5,12 +5,29 @@ import java.net.SocketAddress;
 import java.nio.channels.DatagramChannel;
 
 public class DatagramChannelBuilder {
-    public static DatagramChannel openChannel() throws IOException {
-        DatagramChannel datagramChannel = DatagramChannel.open();
-        return datagramChannel;
+    private DatagramChannel channel;
+
+    public static DatagramChannelBuilder custom() {
+        return new DatagramChannelBuilder();
+    }
+
+    public DatagramChannelBuilder open() throws IOException {
+        channel =  DatagramChannel.open();
+        return this;
     }
     
-    public static DatagramChannel bindChannel(SocketAddress local) throws IOException {
-        return openChannel().bind(local); 
-    }    
+    public DatagramChannelBuilder bind(SocketAddress local) throws IOException {
+        if (this.channel == null) {
+            throw new RuntimeException("请先先调用open方法");
+        }
+
+        if (local != null) {
+            channel.bind(local);
+        } 
+        return this;
+    }
+
+    public DatagramChannel build() {
+        return this.channel;
+    }
 }

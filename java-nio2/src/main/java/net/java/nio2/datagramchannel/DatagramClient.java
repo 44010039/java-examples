@@ -1,14 +1,19 @@
 package net.java.nio2.datagramchannel;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class DatagramClient {
     public static DatagramChannel startClient() throws IOException {
-        DatagramChannel client = DatagramChannelBuilder.bindChannel(null);
+        DatagramChannel client = DatagramChannelBuilder.custom().open().build();
         client.configureBlocking(false);
         return client;
     }
@@ -20,10 +25,16 @@ public class DatagramClient {
 
     public static void main(String[] args) throws IOException {
         DatagramChannel client = startClient();
-        String msg = "Hello, this is a DatagramChannel based UDP client!";
         InetSocketAddress serverAddress = new InetSocketAddress("localhost", 7001);
         
-        sendMessage(client, msg, serverAddress);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line;
+        log.debug("Message to server:");
+        while ((line = br.readLine()) != null) {
+            sendMessage(client, line, serverAddress);
+        }
+
+        
         
     }    
 }
