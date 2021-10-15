@@ -9,6 +9,7 @@
 
   <modules>
     <module>java-nio2</module>
+    <module>java-tools</module>
   </modules>
 
   <properties>

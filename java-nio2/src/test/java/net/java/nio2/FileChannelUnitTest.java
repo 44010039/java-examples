@@ -83,7 +83,7 @@ public class FileChannelUnitTest {
 
     @Test
     public void whenWriteWithFileChannelUsingRandomAccessFile_thenCorrect() throws IOException {
-        String file = "test_write_using_filechannel.txt";
+        String file = "target/test_write_using_filechannel.txt";
         try (RandomAccessFile writer = new RandomAccessFile(file, "rw"); 
             FileChannel channel = writer.getChannel()) {
             ByteBuffer buff = ByteBuffer.wrap("Hello world".getBytes(StandardCharsets.UTF_8));
@@ -148,7 +148,7 @@ public class FileChannelUnitTest {
     public void whenTruncateFile_thenCorrect() throws IOException {
         String input = "this is a test input";
 
-        FileOutputStream fout = new FileOutputStream("test_truncate.txt");
+        FileOutputStream fout = new FileOutputStream("target/test_truncate.txt");
         FileChannel channel = fout.getChannel();
 
         ByteBuffer buff = ByteBuffer.wrap(input.getBytes());

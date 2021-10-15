@@ -32,7 +32,7 @@ public class SymLinkExample {
             .mapToObj(i -> i + System.lineSeparator())
             .reduce("", String::concat)
             .getBytes(StandardCharsets.UTF_8);
-        Path filePath = Paths.get(".", "target.txt");
+        Path filePath = Paths.get("target", "target.txt");
         Files.write(filePath, content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         return filePath;
     }
